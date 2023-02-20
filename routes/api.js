@@ -29,11 +29,14 @@ module.exports = function (app, client) {
 
     .post(function (req, res) {
       let title = req.body.title;
+      if (title == undefined) {
+        res.send("missing required field title");
+        return;
+      }
       let params = { title, comments: [] };
       client.AddDoc(params, (err, doc) => {
         if (err) {
-          res.status(200);
-          res.send({ error: "required field(s) missing" });
+          res.send("missing required field title");
           return;
         }
         res.send(formatDoc(doc));
@@ -45,12 +48,10 @@ module.exports = function (app, client) {
       //if successful response will be 'complete delete successful'
       client.DeleteDoc({}, (err, doc) => {
         if (err || doc.deletedCount == 0) {
-          res.send({ error: "no book exists" });
+          res.send("no book exists");
           return;
         }
-        res.send({
-          result: "delete successful",
-        });
+        res.send("complete delete successful");
       });
     });
 
@@ -91,14 +92,12 @@ module.exports = function (app, client) {
       let _id = req.params.id;
       //if successful response will be 'delete successful'
       client.DeleteDoc({ _id }, (err, doc) => {
-        console.log("delete book:", err, doc);
+        // console.log("delete book:", err, doc);
         if (err || doc.deletedCount == 0) {
-          res.send({ error: "no book exists" });
+          res.send("no book exists");
           return;
         }
-        res.send({
-          result: "delete successful",
-        });
+        res.send("delete successful");
       });
     });
 };

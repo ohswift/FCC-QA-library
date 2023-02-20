@@ -1,12 +1,12 @@
 async function main(callback) {
   const mongoose = require("mongoose");
+  console.log("[DB] begin connect db successfully.");
 
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-
     const Model = mongoose.model(
       "books",
       new mongoose.Schema({
@@ -21,6 +21,8 @@ async function main(callback) {
         done(null, data);
       });
     };
+
+    console.log("[DB] connect db successfully.");
 
     const DeleteDoc = (filters, done) => {
       Model.deleteMany(filters, (err, data) => {
